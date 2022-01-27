@@ -1,26 +1,18 @@
-function add(n1: number, n2: number): number {
-  return n1 + n2;
+let userInput: unknown;
+
+let userName: string;
+
+userInput = 5;
+userInput = "Max";
+
+if (typeof userInput === "string") {
+    userName = userInput;
 }
 
-function printResult(num: number): void {
-  console.log("Result: " + num);
-  return;
+function generateError(message: string, code: number): never {
+    throw {message: message, errorCode: code};
+    // while (true) {}
 }
 
-function addAndHandle(n1: number, n2: number, cb: (num: number) => void) {
-  const result = n1 + n2;
-  console.log(cb(result));
-}
-
-console.log(printResult(add(5, 12)));
-
-let combineValues: (a: number, b: number) => number;
-
-combineValues = add;
-// combineValues = 5;
-
-console.log(combineValues(8, 8));
-
-addAndHandle(10, 20, (result) => {
-  return result;
-});
+const result = generateError("An error occured", 500);
+console.log(result);
