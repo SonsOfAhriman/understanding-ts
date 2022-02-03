@@ -102,6 +102,7 @@
     "basics.ts", 
     "obj-arrays-enums.ts",
     "union-aliases.ts",
-    "functions.ts"
+    "functions.ts",
+    "analytics.ts"
   ]
 }
