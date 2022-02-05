@@ -50,12 +50,17 @@
 
 // console.log(userName, age);
 
-class Department {
-//   private name: string;
+abstract class Department {
+  //   private name: string;
   protected employees: string[] = [];
+  static fiscalYear = 2022;
 
   addEmployee(employee: string) {
     this.employees.push(employee);
+  }
+
+  static createEmployee(name: string) {
+    return { name: name };
   }
 
   printEmployeeInformation() {
@@ -63,29 +68,61 @@ class Department {
     console.log(this.employees);
   }
 
-  constructor(private readonly id: string, private name: string) {
-  }
+  constructor(protected readonly id: string, private name: string) {}
 
-  describe(this: Department) {
-    console.log(`Department (${this.id}): ${this.name}`);
-  }
+  abstract describe(this: Department): void;
 }
 
 class ITDepartment extends Department {
-    constructor(id: string, public admins: string[]) {
-        super(id, "IT");
+  private lastEmployee: string;
 
+  get mostRecentEmployee() {
+    if (this.lastEmployee) {
+      return this.lastEmployee;
     }
+    throw new Error("No employee found");
+  }
+
+  set mostRecentEmployee(value: string) {
+    if (!value) {
+      throw new Error("No employee found");
+    }
+    this.addEmployee(value);
+  }
+
+  describe() {
+      console.log("IT Dept - ID: " + this.id);
+  }
+
+  constructor(id: string, public admins: string[]) {
+    super(id, "IT");
+    this.lastEmployee = this.employees[0];
+  }
+
+  addEmployee(employee: string) {
+    this.employees.push(employee);
+    this.lastEmployee = employee;
+  }
 }
 
-const accounting = new Department("d1", "Accounting");
-const it = new ITDepartment("i1", ["Max"] );
+// const accounting = new Department("d1", "Accounting");
+const it = new ITDepartment("i1", ["Max"]);
 
-console.log(it);
+const employee1 = Department.createEmployee("Sassi");
+console.log(employee1);
+// console.log(it.mostRecentEmployee);
+it.addEmployee("Ryan");
+console.log(it.mostRecentEmployee);
+
+it.mostRecentEmployee = "Yon";
+console.log(it.mostRecentEmployee);
+
+console.log(employee1, Department.fiscalYear);
 
 // accounting.addEmployee("Max");
 // accounting.addEmployee("John");
 
 // accounting.describe();
 // accounting.printEmployeeInformation();
+// it.describe();
 it.describe();

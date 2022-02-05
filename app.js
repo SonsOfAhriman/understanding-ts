@@ -59,13 +59,14 @@ var Department = /** @class */ (function () {
     Department.prototype.addEmployee = function (employee) {
         this.employees.push(employee);
     };
+    Department.createEmployee = function (name) {
+        return { name: name };
+    };
     Department.prototype.printEmployeeInformation = function () {
         console.log(this.employees.length);
         console.log(this.employees);
     };
-    Department.prototype.describe = function () {
-        console.log("Department (".concat(this.id, "): ").concat(this.name));
-    };
+    Department.fiscalYear = 2022;
     return Department;
 }());
 var ITDepartment = /** @class */ (function (_super) {
@@ -73,15 +74,47 @@ var ITDepartment = /** @class */ (function (_super) {
     function ITDepartment(id, admins) {
         var _this = _super.call(this, id, "IT") || this;
         _this.admins = admins;
+        _this.lastEmployee = _this.employees[0];
         return _this;
     }
+    Object.defineProperty(ITDepartment.prototype, "mostRecentEmployee", {
+        get: function () {
+            if (this.lastEmployee) {
+                return this.lastEmployee;
+            }
+            throw new Error("No employee found");
+        },
+        set: function (value) {
+            if (!value) {
+                throw new Error("No employee found");
+            }
+            this.addEmployee(value);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    ITDepartment.prototype.describe = function () {
+        console.log("IT Dept - ID: " + this.id);
+    };
+    ITDepartment.prototype.addEmployee = function (employee) {
+        this.employees.push(employee);
+        this.lastEmployee = employee;
+    };
     return ITDepartment;
 }(Department));
-var accounting = new Department("d1", "Accounting");
+// const accounting = new Department("d1", "Accounting");
 var it = new ITDepartment("i1", ["Max"]);
-console.log(it);
+var employee1 = Department.createEmployee("Sassi");
+console.log(employee1);
+// console.log(it.mostRecentEmployee);
+it.addEmployee("Ryan");
+console.log(it.mostRecentEmployee);
+it.mostRecentEmployee = "Yon";
+console.log(it.mostRecentEmployee);
+console.log(employee1, Department.fiscalYear);
 // accounting.addEmployee("Max");
 // accounting.addEmployee("John");
 // accounting.describe();
 // accounting.printEmployeeInformation();
+// it.describe();
 it.describe();
